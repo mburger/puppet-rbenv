@@ -33,15 +33,16 @@ define rbenv::gem(
 ) {
   require rbenv
 
-  exec { "gem-install-${name}":
+  exec { "gem-install-${name}-${ruby_version}":
     command => "gem install ${name} --version '${version}'",
     onlyif  => "/usr/bin/test -d ${install_dir}/versions/${ruby_version}",
     unless  => "gem list ${name} --installed --version '${version}'",
-    path    => "${install_dir}/versions/${ruby_version}/bin/",
+    path    => "${install_dir}/versions/${ruby_version}/bin:/usr/sbin:/usr/bin:/sbin:/bin",
     require => Rbenv::Build[$ruby_version],
   }~>
   exec { "rbenv-rehash-${name}":
     command     => "${install_dir}/bin/rbenv rehash",
+    environment => "RBENV_ROOT=${install_dir}",
     refreshonly => true,
   }
 }
