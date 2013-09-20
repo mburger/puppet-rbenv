@@ -54,7 +54,7 @@ define rbenv::build (
 
   $environment_for_build = $cflags ? {
     'none'  => ["RBENV_ROOT=${install_dir}"],
-    default => ["CFLAGS=${cflags}", "RBENV_ROOT=${install_dir}"],
+    default => ["CFLAGS=${cflags}", "RBENV_ROOT=${install_dir}", "CONFIGURE_OPTS=--disable-install-rdoc", "MAKEOPTS=-j ${::processorcount}"],
   }
 
   Exec {
